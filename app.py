@@ -85,11 +85,13 @@ def predict_and_visualize(image):
         heatmap_colormap = cv2.applyColorMap(heatmap_resized, cv2.COLORMAP_JET)
         
         # Superimpose the heatmap on original image
-        original_img_cv = cv2.cvtColor(np.array(image), cv2.COLORMAP_RGB2BGR)
+        # THE FIX: Changed COLORMAP_RGB2BGR to COLOR_RGB2BGR
+        original_img_cv = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
         superimposed_img = cv2.addWeighted(original_img_cv, 0.6, heatmap_colormap, 0.4, 0)
         
         # Convert back to PIL Image for Gradio
-        final_img = cv2.cvtColor(superimposed_img, cv2.COLORMAP_BGR2RGB)
+        # THE FIX: Changed COLORMAP_BGR2RGB to COLOR_BGR2RGB
+        final_img = cv2.cvtColor(superimposed_img, cv2.COLOR_BGR2RGB)
         out_image = Image.fromarray(final_img)
     else:
         # Fallback if no conv layer is found
