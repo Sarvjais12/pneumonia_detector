@@ -15,32 +15,43 @@ for layer in reversed(model.layers):
         break
 
 # 3. Grad-CAM Algorithm
+# 3. Grad-CAM Algorithm
 def make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=None):
     # Create a model that maps the input image to the activations of the last conv layer as well as the output predictions
     grad_model = tf.keras.models.Model(
         [model.inputs], [model.get_layer(last_conv_layer_name).output, model.output]
     )
 
-    # Compute the gradient of the top predicted class for our input image with respect to the activations of the last conv layer
     with tf.GradientTape() as tape:
-        last_conv_layer_output, preds = grad_model(img_array)
+        outputs = grad_model(img_array)
+        
+        # THE FIX: Forcefully extract the tensors if Keras 3 wraps them in a list
+        last_conv_layer_output = outputs[0] if not isinstance(outputs[0], list) else outputs[0][0]
+        preds = outputs[1] if not isinstance(outputs[1], list) else outputs[1][0]
+
         if pred_index is None:
             pred_index = tf.argmax(preds[0])
+            
+        # preds is now guaranteed to be a Tensor, so slicing will work perfectly
         class_channel = preds[:, pred_index]
 
-    # This is the gradient of the output neuron with respect to the output feature map
+    # Compute gradients
     grads = tape.gradient(class_channel, last_conv_layer_output)
 
-    # Vector where each entry is the mean intensity of the gradient over a specific feature map channel
+    # Pool the gradients
     pooled_grads = tf.reduce_mean(grads, axis=(0, 1, 2))
 
-    # Multiply each channel in the feature map array by "how important this channel is" with regard to the top predicted class
+    # Weight the feature map
     last_conv_layer_output = last_conv_layer_output[0]
     heatmap = last_conv_layer_output @ pooled_grads[..., tf.newaxis]
     heatmap = tf.squeeze(heatmap)
 
-    # Normalize the heatmap between 0 & 1
-    heatmap = tf.maximum(heatmap, 0) / tf.math.reduce_max(heatmap)
+    # Normalize the heatmap safely (preventing divide-by-zero)
+    heatmap = tf.maximum(heatmap, 0)
+    max_val = tf.math.reduce_max(heatmap)
+    if max_val != 0:
+        heatmap = heatmap / max_val
+        
     return heatmap.numpy()
 
 # 4. Core Prediction & Visualization Function
