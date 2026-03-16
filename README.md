@@ -1,7 +1,7 @@
 # 🫁 Interpretable Pneumonia AI (VGG16 + Grad-CAM)
 
 ### **Explainable Deep Learning for Medical Image Analysis**
-[![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/Sarvjais12/your-pneumonia-space-name) This project bridges the gap between high-accuracy medical AI and clinical trust. It uses a fine-tuned **VGG16** convolutional neural network to detect pneumonia from chest X-rays, paired with **Grad-CAM** (Gradient-weighted Class Activation Mapping) to visually explain the model's predictions.
+[![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/Sarvjais12/Pneumonia-Detector-AI) This project bridges the gap between high-accuracy medical AI and clinical trust. It uses a fine-tuned **VGG16** convolutional neural network to detect pneumonia from chest X-rays, paired with **Grad-CAM** (Gradient-weighted Class Activation Mapping) to visually explain the model's predictions.
 
 ---
 
@@ -28,7 +28,7 @@
 * **Deep Learning Framework**: TensorFlow / Keras (or PyTorch)
 * **Computer Vision**: OpenCV, NumPy, Matplotlib
 * **Model Architecture**: VGG16
-* **Interface & Deployment**: Gradio, Hugging Face Spaces
+* **Interface & Deployment**: Gradio, Hugging Face Spaces : https://huggingface.co/spaces/Sarvjais12/Pneumonia-Detector-AI
 
 ---
 
